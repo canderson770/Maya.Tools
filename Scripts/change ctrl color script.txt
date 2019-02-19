@@ -1,0 +1,8 @@
+import maya.cmds as cmds
+
+sels = cmds.ls(sl=True)
+for sel in sels:
+    children = cmds.listRelatives(sel, children=True, shapes=True)
+    for child in children:
+        cmds.setAttr('%s.overrideEnabled' % child, 1)
+        cmds.setAttr('%s.overrideColor' % child, 13)

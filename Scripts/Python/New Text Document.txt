@@ -1,0 +1,17 @@
+import maya.cmds as cmds
+
+def multiconstraint(sel_method):
+	sels = cmds.ls(sl=True)
+
+	if len(sels) %2:
+		cmds.error("")
+
+	if(sel_method)
+	targets = sels[0::2]
+	nodes = sels[1::2]
+
+	for index, sel in enumerate(targets):
+		cmds.parentConstraint(targets[index], nodes[index])
+
+	cmds.select(targets, r=True)
+

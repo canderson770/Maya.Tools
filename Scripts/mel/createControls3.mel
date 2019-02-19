@@ -1,0 +1,34 @@
+string $sels[] = `ls -sl`;
+string $buffer[];
+
+for($i=0; $i<size($sels); $i++)
+{
+    string $temp = $sels[$i];
+    tokenize $temp "_" $buffer;
+    print($temp);
+    
+    string $circle[] = `circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0 -s 8 -ch 1`;
+    string $newGrp = `group`;
+    
+    select -add $sels[$i];
+    parent;
+    
+    setAttr ($newGrp + ".rotateZ") 0;
+    setAttr ($newGrp + ".translateX") 0;
+    setAttr ($newGrp + ".translateY") 0;
+    setAttr ($newGrp + ".translateZ") 0;
+    setAttr ($newGrp + ".rotateX") 0;
+    setAttr ($newGrp + ".rotateY") 0;
+    
+    parent -w;
+    string $frontName;
+    
+    for($j=0; $j<size($buffer-1); $j++)
+    {
+        string $temp2 = $buffer[$j] + "_"
+        $frontName += $temp2;
+    }
+    
+    rename $newGrp ($buffer[$j] + "Grp");
+    rename $circle[0] ($buffer[0] + "Ctrl");
+}

@@ -1,0 +1,113 @@
+source randomPlacementScript;
+source scaleCompSwitchScript;
+source placeControlsScript;
+source jointOrientScript;
+source renameScript;
+source createLocatorScript;
+source createJointsScript;
+source createFKScript;
+
+global string $locatorBtnSelected = "";
+
+global proc MyToolboxWindow()
+{
+    string $myWindow = "myToolboxWindow";
+    string $myDock = "MyToolboxDock";
+
+
+    if(`window -exists $myWindow` == true)
+        deleteUI -window $myWindow;
+		
+	if(`dockControl -exists $myDock`)
+		deleteUI $myDock;
+        
+    $myWindow = `window -title "Window" -width 200 -iconName "logo-32.png" $myWindow`;
+	string $mainColumn = `columnLayout -adjustableColumn 1 -columnAlign "center" -parent $myWindow`;
+	
+	string $imageRow = `rowLayout -parent $mainColumn -numberOfColumns 2 -adjustableColumn 2 -columnAlign 2 "center" -backgroundColor 1 1 1`;
+	    string $myImage = `picture -image "logo-32.png" -parent $imageRow`;
+		// string $myImageButton = `iconTextButton -style "iconOnly" -image "logo-32.png" -height 32 -flat 1 -width 32 -parent $imageRow -command "ToolboxWindow()"`;	
+		string $myName = `text -label "Cody Anderson" -parent $imageRow`;
+	
+	string $tabs = `tabLayout -parent $mainColumn`;
+	
+    string $tab1Column = `columnLayout -adjustableColumn 1 -columnAlign "center" -parent $tabs`;
+	
+	separator -height 12 - parent $tab1Column;
+    string $deleteHistoryBtn = `button - parent $tab1Column -label "Delete History" -command "DeleteHistory"`;
+    string $freezeTransformBtn = `button - parent $tab1Column -label "Freeze Transformations" -command "makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1"`;
+	string $centerPivotBtn = `button - parent $tab1Column -label "Center Pivot" -command "CenterPivot"`;
+	string $parentScaleConstrainBtn = `button - parent $tab1Column -label "Parent and Scale Constrain" -command "ParentScaleConstrain()"`;
+	
+	separator -height 12 - parent $tab1Column;
+	string $orientJointRow = `rowLayout -parent $tab1Column -numberOfColumns 2 -columnWidth 1 125 -adjustableColumn 2 -columnAttach 1 "both" 0`;
+
+	string $orientJointBtn = `button - parent $orientJointRow -label "Orient Joint Options" -command "OrientJoint()"`;
+	//string $orientJointToggleBtn = `button - parent $tab1Column -label "Toggle Local Axes Visibility" -command "ShowOrient()"`;
+	string $toggle = `iconTextButton -style "iconOnly" -image1 "channelBoxUseManips.png" -parent $orientJointRow -command "ShowOrient()"`;	
+	
+	separator -height 12 - parent $tab1Column;
+	string $scaleCompLabel = `text -label "Scale Compensation" -parent $tab1Column`;
+	string $scaleCompRow = `rowLayout -parent $tab1Column -numberOfColumns 2 -columnWidth 1 75 -adjustableColumn 2 -columnAttach 1 "both" 0`;
+		string $scaleCompOnBtn = `button - parent $scaleCompRow -label "On" -command "ScaleCompSwitch(1)"`;
+		string $scaleCompOffBtn = `button - parent $scaleCompRow  -label "Off" -command "ScaleCompSwitch(0)"`;
+	
+	separator -height 12 - parent $tab1Column;
+	string $createJointsBtn = `button - parent $tab1Column -label "Turn Selection into Joints" -command "ConvertToJoints()"`;
+	string $placeControlsBtn = `button - parent $tab1Column -label "Place Controls" -command "PlaceControls()"`;
+	
+	separator -height 12 - parent $tab1Column;
+	string $locatorRow = `rowLayout -parent $tab1Column -numberOfColumns 3 -columnWidth 1 62 -adjustableColumn 2 -columnAttach 1 "both" 0`;
+		string $creatLocatorBtn = `button - parent $locatorRow -label "Locators" -command "CreateManyLocators($locatorBtnSelected)"`;
+		string $locatorButtons = `radioCollection -parent $locatorRow`;
+			string $locatorBtn1 = `radioButton -label "Each" -changeCommand "ChangeLocatorButtons(\"Each\")" "Each"`;
+			string $locatorBtn2 = `radioButton -label "All" -changeCommand "ChangeLocatorButtons(\"All\")" "All"`;
+		radioCollection -edit -select $locatorBtn1 $locatorButtons;
+	
+	separator -height 12 - parent $tab1Column;
+	string $renameBtn = `button - parent $tab1Column -label "Rename" -command "RenamePrompt()"`;
+	string $searchAndReplaceBtn = `button - parent $tab1Column -label "Search And Replace" -command "performSearchReplaceNames 1"`;
+
+	separator -height 12 - parent $tab1Column;
+	// string $polyCountBtn = `iconTextButton -style "iconOnly" -image1 "WireFrame.png" -parent $tab1Column -command "TogglePolyCount"`;	
+	string $polyCountBtn = `button - parent $tab1Column -label "Poly Count" -command "TogglePolyCount;"`;
+
+	separator -height 12 - parent $tab1Column;
+	string $rigsRow = `rowLayout -parent $tab1Column -numberOfColumns 3 -columnAlign 2 "left"`;
+		string $FKButton = `iconTextButton -style "iconAndTextVertical" -image1 "kinJoint.png" -label "FK" - parent $rigsRow -command "CreateFKPrompt()"`;
+		string $IKButton = `iconTextButton -style "iconAndTextVertical" -image1 "kinHandle.png" -label "IK" - parent $rigsRow`;
+		string $RKButton = `iconTextButton -style "iconAndTextVertical" -image1 "kinJoint.png" -label "RK" - parent $rigsRow`;	
+				
+	string $tab2Column = `columnLayout -adjustableColumn 1 -columnAlign "center" -parent $tabs`;
+	
+		separator -height 12 - parent $tab2Column;
+		string $randomPlaceBtn = `button - parent $tab2Column -label "Random Placement" -command "RandomPlacementPrompt()"`;
+		separator -height 12 - parent $tab2Column;
+		string $otherLabel = `text -label "..." -parent $tab2Column`;
+
+    // string $txtField = `textFieldGrp -parent $mainColumn -label "Control Name" -columnWidth 1 80 `;	
+	// separator -height 12 - parent $mainColumn;
+    // string $floatField = `floatSliderButtonGrp -parent $mainColumn -label "Size" -minValue 0 -maxValue 100 -field 1 -value 1 -buttonLabel "Go" 
+	// -columnAlign3 "left" "left" "left" -columnAlign 1 "right" -image "cmdWndIcon.xpm"`;
+    
+	tabLayout -edit -tabLabel $tab1Column "Main" -tabLabel $tab2Column "Other" $tabs;
+	
+	// separator -height 15 - parent $mainColumn;
+	string $myName = `text -label "2017  " -parent $mainColumn -align "right"`;
+	
+    // showWindow $myWindow;
+	dockControl -area "left" -content $myWindow -allowedArea "left" -allowedArea "right" -label "Cody" $myDock;
+	dockControl -edit -width 160 -fixedWidth 1 -height 560 -fixedHeight 1 $myDock;
+}
+
+global proc ParentScaleConstrain()
+{
+	parentConstraint -weight 1;
+	scaleConstraint -offset 1 1 1 -weight 1;
+}
+
+global proc ChangeLocatorButtons(string $type)
+{
+	global string $locatorBtnSelected;
+	$locatorBtnSelected = $type;
+}

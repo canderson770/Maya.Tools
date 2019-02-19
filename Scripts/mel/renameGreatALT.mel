@@ -1,0 +1,56 @@
+proc string[] Rename(string $name, string $prefix)
+{
+    string $sels[] = `ls -sl`;
+    string $returnNames[];
+    string $buffer[];
+    
+    int $numTokens = `tokenize $name "#" $buffer`;
+    
+    if($numTokens == 1)
+    {
+         for($i=0; $i<size($sels); $i++)
+        {
+            string $newName;
+            $newName = $buffer[0] + "_" + ($i+1) + $prefix;
+            stringArrayInsertAtIndex(size($returnNames), $returnNames, `rename $sels[$i] $newName`);        }
+    }
+    /*else if($numTokens != 2)
+    {
+        error("Too many #");
+    }
+    else
+    {
+        for($i=0; $i<size($sels); $i++)
+        {
+            string $newName;
+            $newName = $buffer[0] + ($i+1) + $prefix;
+            stringArrayInsertAtIndex(size($returnNames), $returnNames, `rename $sels[$i] $newName`);
+        }
+    }*/
+    return $returnNames;
+}
+
+
+string $text;
+string $result = `promptDialog 
+     -title "Rename"
+     -message "Enter Name:"
+     -button "Joint" -button "Control" -button "Group" -button "Cancel"
+     -defaultButton "Joint" -cancelButton "Cancel"
+     -dismissString "Cancel"`;
+
+if ($result == "Joint")
+{
+     $text = `promptDialog -query -text`;
+     Rename($text, "_Jnt");
+}
+else if ($result == "Control")
+{
+     $text = `promptDialog -query -text`;
+     Rename($text, "_Ctrl");
+}
+else if ($result == "Group")
+{
+     $text = `promptDialog -query -text`;
+     Rename($text, "_Grp");
+}

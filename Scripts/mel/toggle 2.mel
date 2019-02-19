@@ -1,0 +1,18 @@
+string $sels[] = `ls -sl`;
+if(size($sels) != 0)
+    if ( catch( `jointOrientToggleAxesVisibility` ) )
+    {
+        OrientJointOptions;
+        deleteUI "OptionBoxWindow";
+    } 
+else
+{
+	SelectAllJoints;
+    if ( catch( `jointOrientToggleAxesVisibility` ) )
+    {
+        OrientJointOptions;
+        deleteUI "OptionBoxWindow";
+    } 
+	select -d;
+}
+

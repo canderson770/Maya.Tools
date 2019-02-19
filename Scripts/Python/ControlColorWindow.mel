@@ -1,0 +1,62 @@
+  global proc ControlColorWindow (){
+string $mWindow = "Control_Color_Window";
+
+if (`window -ex $mWindow` == true)
+	deleteUI -window $mWindow;
+
+$mWindow = `window -title "Change Drawing Override Color" -iconName "Change Color" -widthHeight 375 150 -sizeable 0 $mWindow`;
+
+string $mainColumn = `columnLayout -adj true -parent $mWindow`;
+
+       text -h 10 " ";
+	   separator -h 30;
+       string $colorSlider = `colorIndexSliderGrp -label "Select Color     " -min 0 -max 32 -value 5`;
+       separator -h 30;
+
+       string $buttonFormLayout = `formLayout -numberOfDivisions 100`;
+       
+       string $createButton = `button -w 125 -label "Color" -command ("CreateAndCloseCcol(\"" + $colorSlider + "\", \"" + $mWindow + "\")") -rs true -p $buttonFormLayout`;
+       string $applyButton = `button -w 125 -label "Apply" -command ("CurveColor(\"" + $colorSlider + "\")") -rs true -p $buttonFormLayout`;
+       string $closeButton = `button -w 125 -label "Close" -command ("deleteUI -window " + $mWindow) -rs true -p $buttonFormLayout`;
+       formLayout -edit
+       		-attachPosition $createButton     "left"  5 0
+       		-attachPosition $createButton     "right"  5 33
+       		
+       		-attachPosition $applyButton     "left"  0 33
+       		-attachPosition $applyButton     "right"  0 67
+       		
+       		-attachPosition $closeButton     "left"  5 67
+       		-attachPosition $closeButton     "right"  5 100 
+       		$buttonFormLayout;
+
+showWindow $mWindow;
+}
+
+//Function that Applys and Closes the Window
+//(it has to feed the information down the line through this function in order to make it work.  
+//i.e. $colorSlider feeds into this $color, which feeds into CurveColors $color), it uses $whichWindow to close the window.
+global proc CreateAndCloseCcol(string $color, string $whichWindow){
+	CurveColor ($color);
+	deleteUI -window $whichWindow;
+	}
+
+//Color Changer Function (receiveing one parameter which comes from the Index Slider in $mWindow)
+global proc CurveColor (string $color){
+	string $sels[] = `ls-sl`; //add selection to array
+	
+    int $colorIndex = `colorIndexSliderGrp -q -value $color`; //get the indexSlider Value
+	int $finalColor = $colorIndex -1; //applys the IndexSlider Value to a new integer (for some reason the slider isn't actually accurate, so it needs to be altered by -1)
+	
+	//Change the Color 
+	for ($i=0; $i<size($sels); $i++)
+	{
+	    string $shapes[] = `listRelatives -c -s $sels[$i]`;  //checks shape child of the object, adds it to an Array
+	    for ($j=0; $j<size($shapes);$j++)
+	    {
+        setAttr ($shapes[$j] + ".overrideEnabled") 1;  //set Drawing Overrides to True
+        setAttr ($shapes[$j] + ".overrideColor") $finalColor; //Apply Index Color Selection to Color Index (then repeat)
+        }
+	}
+}
+
+

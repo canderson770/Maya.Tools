@@ -1,0 +1,37 @@
+global proc ConvertToJoints()
+{
+	string $sels[] = `ls -sl`;
+	string $savedSels[];
+	
+	if(size($sels) > 0)
+	{
+		select -cl;
+		
+		for($i=0; $i<size($sels); $i++)
+		{
+			string $tempJoint = `joint`;
+
+			float $pos[] = `xform -q -ws -rp $sels[$i]`;
+			float $rot[] = `xform -q -ws -ro $sels[$i]`;
+		
+			move -rpr $pos[0] $pos[1] $pos[2] $tempJoint;
+			rotate -a -ws $rot[0] $rot[1] $rot[2] $tempJoint;
+			
+			// joint -p `getAttr($sels[$i] + ".rotatePivotX")` getAttr($sels[$i] + ".rotatePivotY")` `getAttr($sels[$i] + ".rotatePivotZ")`;
+		
+			select -cl;   
+			select -r $sels[$i];
+			doDelete;
+			
+			$savedSels[$i] = $tempJoint;
+		} 
+		
+		select -cl;
+		for($i=0; $i<size($savedSels); $i++)
+		{
+			select -add $savedSels[$i];
+		}
+	}
+}
+
+

@@ -1,0 +1,36 @@
+int $numCoins = 100;
+float $randX;
+float $randY;
+float $randZ;
+float $randRotX;
+float $randRotZ;
+string $coinGrp = "coin_Grp";
+
+//COINS
+for($i = 0; $i < $numCoins; $i++)
+{
+    polyCylinder -r 1 -h .15 -sx 14 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+    $randX = rand(-5 , 5);
+    $randY = rand(0,2);
+    $randZ = rand(-3.3, 3.3);
+    $randRotX = rand(-25, 25);
+    $randRotZ = rand(-25, 25);
+
+    setAttr "pCylinder1.translateX" $randX;
+    setAttr "pCylinder1.translateY" $randY;
+    setAttr "pCylinder1.translateZ" $randZ ;
+    
+    setAttr "pCylinder1.rotateX" $randRotX;
+    setAttr "pCylinder1.rotateZ" $randRotZ;
+    sets -e -forceElement phong2SG;
+
+    string $newName = "coin";
+    rename "pCylinder1" $newName;
+    
+    //select -r $newName;
+    select -add $coinGrp ;
+    parent;
+    
+    select -cl  ;
+
+}

@@ -1,0 +1,20 @@
+global proc ScaleCompSwitch(int $onOFF)
+{
+    string $sels[] = `ls -sl`;
+	select -cl;
+	SelectAllJoints;
+
+	string $sels[] = `ls -sl`;
+	for($i = 0; $i < size($sels); $i++)
+	{
+		select-d;
+		setAttr ($sels[$i] + ".segmentScaleCompensate") $onOFF;
+	}
+	
+	select -cl;
+
+	for($i=0; $i<size($sels); $i++)
+	{
+		select -add $sels[$i];
+	}
+}

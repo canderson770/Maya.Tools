@@ -1,0 +1,3 @@
+lambda *args: 
+
+command= lambda *args: create_control()

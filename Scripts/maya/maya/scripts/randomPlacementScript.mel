@@ -1,0 +1,100 @@
+global float $xMin;
+global float $xMax;
+global float $yMin;
+global float $yMax;
+global float $zMin;
+global float $zMax;
+global int $randPlaceAmount;
+
+proc RandomPlacement(float $_xMin, float $_xMax, float $_yMin, float $_yMax, float $_zMin, float $_zMax, 
+int $_randPlaceAmount, int $translate, int $rotate, int $scale)
+{
+    string $sels[] = `ls -sl`;
+    string $savedSels[];
+	
+    for($i=0; $i<size($sels); $i++)
+    {
+        for($j=0; $j<$_randPlaceAmount; $j++)
+        {
+            string $copy[] = `duplicate -rr $sels[$i]`;
+			
+			if($translate)
+				move `rand $_xMin $_xMax` `rand $_yMin $_yMax` `rand $_zMin $_zMax` $copy[0];
+			if($rotate)
+				rotate `rand 0 360` `rand 0 360` `rand 0 360` $copy[0];
+			if($scale)
+				scale `rand .5 2` `rand .5 2` `rand .5 2` $copy[0];
+				
+			$savedSels[$j] = $copy[0];
+        }
+    }
+	
+	select -cl;
+	for($i=0; $i<size($savedSels); $i++)
+	{
+		select -add $savedSels[$i];
+	} 
+}
+
+global proc RandomPlacementPrompt()
+{
+	string $randomPlaceWindow = "RandomPlacementWindow";
+
+    if(`window -exists $randomPlaceWindow` == true)
+        deleteUI -window $randomPlaceWindow;
+        
+    $randomPlaceWindow = `window -title "Random Placement" $randomPlaceWindow`;
+	string $randomPlaceColumn = `columnLayout -adjustableColumn 1 -columnAlign "center" -parent $randomPlaceWindow`;
+		separator -height 12 - parent $randomPlaceColumn;
+		string $randomPlaceMinRow = `rowLayout -parent $randomPlaceColumn -numberOfColumns 7 -columnWidth 1 30`;
+			text -label "Min | ";
+			text -label "X:";
+			string $xMinField = `floatField -precision 2 -v -10 randPlaceMinX`;
+			text -label "Y:";
+			string $yMinField = `floatField -precision 2 -v -10 randPlaceMinY`;
+			text -label "Z:";
+			string $zMinField = `floatField -precision 2 -v -10 randPlaceMinZ`;
+		string $randomPlaceMaxRow = `rowLayout -parent $randomPlaceColumn -numberOfColumns 7 -columnWidth 1 30`;
+			text -label "Max | ";
+			text -label "X:";
+			string $xMaxField = `floatField -precision 2 -v 10 randPlaceMaxX`;
+			text -label "Y:";
+			string $yMaxField = `floatField -precision 2 -v 10 randPlaceMaxY`;
+			text -label "Z:";
+			string $zMaxField = `floatField -precision 2 -v 10 randPlaceMaxZ`;
+			
+		separator -height 12 - parent $randomPlaceColumn;
+		string $amountSliderGrp = `intSliderGrp -parent $randomPlaceColumn -columnAlign3 "left" "left" "left" -cw 1 50 -cw 2 50 -adjustableColumn 3 -label "Amount:" -field true
+			-minValue 0 -maxValue 100
+			-fieldMinValue 0 -fieldMaxValue 100
+			-value 0 randPlaceAmount`;
+			
+		separator -height 12 - parent $randomPlaceColumn;
+		string $randPlaceCheckBoxes = `checkBoxGrp -parent $randomPlaceColumn -numberOfCheckBoxes 3 -columnWidth3 80 80 80 -va3 true true true 
+			-labelArray3 "Translate" "Rotate" "Scale" "randPlaceCheckBoxes"`;
+		
+		separator -height 12 - parent $randomPlaceColumn;
+		string $randomPlaceApplyRow = `rowLayout -parent $randomPlaceColumn -numberOfColumns 2 -columnAttach2 "both" "both" -columnWidth2 126 126`;
+			string $randomPlaceRandomBtn = `button - parent $randomPlaceApplyRow -label "Randomize" -command "GetRandomPlaceInput(1)"`;
+			string $randomPlaceApplyBtn = `button - parent $randomPlaceApplyRow -label "Apply" -command "GetRandomPlaceInput(0)"`;
+
+	showWindow $randomPlaceWindow;
+	window -edit -widthHeight 252 165 -sizeable false $randomPlaceWindow;
+}
+
+global proc GetRandomPlaceInput(int $close)
+{
+	RandomPlacement(
+		`floatField -q -v randPlaceMinX`,
+		`floatField -q -v randPlaceMaxX`,
+		`floatField -q -v randPlaceMinY`,
+		`floatField -q -v randPlaceMaxY`,
+		`floatField -q -v randPlaceMinZ`,
+		`floatField -q -v randPlaceMaxZ`,
+		`intSliderGrp -q -v randPlaceAmount`,
+		`checkBoxGrp -q -v1 randPlaceCheckBoxes`,
+		`checkBoxGrp -q -v2 randPlaceCheckBoxes`,
+		`checkBoxGrp -q -v3 randPlaceCheckBoxes`);
+	if($close == 1)
+		deleteUI -window "RandomPlacementWindow";
+}

@@ -1,0 +1,26 @@
+int $onOFF = 0;
+string $question = `confirmDialog -title "Scale Compensate" -message "Do you want it on or off?" 
+     -button "On" -button "Off" -button "Cancel" -defaultButton "Off" 
+     -cancelButton "Cancel" -dismissString "Cancel"`;
+
+if ($question == "On") 
+{
+    $onOFF = 1;
+    print($onOFF);
+} 
+else if($question == "Off")
+{
+    $onOFF = 0;
+    print($onOFF);
+}
+
+
+select-d;
+SelectAllJoints;
+
+string $sels[] = `ls -sl`;
+for($i = 0; $i < size($sels); $i++)
+{
+    select-d;
+    setAttr ($sels[$i] + ".segmentScaleCompensate") $onOFF;
+}

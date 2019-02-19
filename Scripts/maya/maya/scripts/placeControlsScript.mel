@@ -1,0 +1,47 @@
+global proc PlaceControls()
+{
+	string $sels[] = `ls -sl`;
+	string $savedSels[];
+	string $buffer[];
+
+	if(size($sels) > 0)
+	{
+		for($i=0; $i<size($sels); $i++)
+		{
+			string $temp = $sels[$i];
+			tokenize $temp "_" $buffer;
+			
+			string $circle[] = `circle -c 0 0 0 -nr 1 0 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0 -s 8 -ch 1`;
+			DeleteHistory;
+			string $newGrp = `group`;
+			
+			select -add $sels[$i];
+			parent;
+			
+			setAttr ($newGrp + ".rotateZ") 0;
+			setAttr ($newGrp + ".translateX") 0;
+			setAttr ($newGrp + ".translateY") 0;
+			setAttr ($newGrp + ".translateZ") 0;
+			setAttr ($newGrp + ".rotateX") 0;
+			setAttr ($newGrp + ".rotateY") 0;
+			
+			parent -w;
+			string $frontName;
+			
+			for($j=0; $j<(size($buffer)-1); $j++)
+			{
+				string $temp2 = $buffer[$j] + "_";
+				$frontName += $temp2;
+			}
+			
+			rename $circle[0] ($frontName + "Ctrl");
+			$savedSels[$i] = `rename $newGrp ($frontName + "Grp")`;
+		}
+		
+		select -cl;
+		for($i=0; $i<size($savedSels); $i++)
+		{
+			select -add $savedSels[$i];
+		} 
+	}
+}

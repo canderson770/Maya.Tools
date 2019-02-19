@@ -1,0 +1,21 @@
+proc Randomize(int $num, int $xRange, int $yRange, int $zRange)
+{
+    string $sels[] = `ls -sl`;
+    
+    for($i=0; $i<size($sels); $i++)
+    {
+        for($j=0; $j<$num; $j++)
+        {
+            float $xPos = `rand (-$xRange) $xRange`;
+            float $yPos = `rand (-$yRange) $yRange`;
+            float $zPos = `rand (-$zRange) $zRange`;
+            
+            string $obj[] =`duplicate -rr $sels[$i]`;
+            move $xPos $yPos $zPos $obj[0];
+            rotate `rand 360` `rand 360` `rand 360` $obj[0];
+            scale `rand .5 2` `rand .5 2` `rand .5 2` $obj[0];
+        }
+    }
+}
+
+Randomize(10, 30, 40, 50);

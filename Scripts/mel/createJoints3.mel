@@ -1,0 +1,36 @@
+proc MakeJoints(float $radSize)
+{
+   string $sels[] = `ls -sl`;
+
+    for($i=0; $i<size($sels); $i++)
+    {
+        select -cl;
+        joint -p `getAttr($sels[$i] + ".rotatePivotX")` 
+                 `getAttr($sels[$i] + ".rotatePivotY")`
+                 `getAttr($sels[$i] + ".rotatePivotZ")`
+              -rad $radSize;
+    
+        select -cl;     
+        select -r $sels[$i];
+        doDelete;
+    } 
+    
+    SelectAllJoints;
+    jointOrientToggleAxesVisibility;
+}
+
+string $text;
+string $result = `promptDialog 
+     -title "Enter Joint Radius"
+     -message "Enter Joint Radius:"
+     -button "OK" -button "Cancel"
+     -defaultButton "OK" -cancelButton "Cancel"
+     -dismissString "Cancel"`;
+
+if ($result == "OK")
+ {
+     $text = `promptDialog -query -text`;
+     MakeJoints((float)$text);
+}
+
+

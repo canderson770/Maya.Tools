@@ -1,0 +1,22 @@
+string $changeName = "This";
+string $suffix = "_Jnt";
+
+string $selection[] = `ls -sl`;
+string $selChild[] =  `listRelatives -ad -path $selection[0]`;
+
+int $a = size($selChild);
+
+for($j=0; $j<size($selChild); $j++)
+{
+    $selection[size($selection)] = $selChild[$j];
+}
+
+int $a = size($selection);
+
+for($i = 0; $i < size($selection); $i++)
+{
+    select -d;
+    select $selection[$i];
+    string $temp = $changeName + ($i + 1) + $suffix;
+    rename $selection[$i] $temp;
+}

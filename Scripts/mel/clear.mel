@@ -1,0 +1,7 @@
+delete "phong1SG";
+delete "phong2SG";
+delete "chest";
+delete "coins";
+
+select -all;
+doDelete;

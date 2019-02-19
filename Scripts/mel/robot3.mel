@@ -1,0 +1,245 @@
+//Make head 
+polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1;
+rename "pCube1" "head";
+scale -r 1 0.8 1 ;
+move -r 0 0.2 0 ;
+
+//antena
+polyCylinder -r .02 -h .6 -sx 8 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+rename "pCylinder1" "antenna";
+move -r -os -wd -0.4 0.8 -0.38 ;
+polySphere -r .05 -sx 6 -sy 6 -ax 0 1 0 -cuv 2 -ch 1;
+rename "pSphere1" "antennaTip";
+move -rpr -0.4 1.1 -0.38 ;
+polySoftEdge -a 180 -ch 1;
+
+//make eyes
+polyPipe -r 1 -h 2 -t 0.4 -sa 10 -sh 1 -sc 0 -ax 0 0 1 -cuv 1 -rcp 0 -ch 1;
+rename "pPipe1" "leftEye";
+scale -r 0.2 0.2 0.3 ;
+move -r 0.22 0.2 .5 ;
+duplicate -rr;
+rename "leftEye1" "rightEye";
+move -r -0.44 0 0 ;
+
+polyCylinder -r 1 -h 2 -sx 20 -sy 1 -sz 1 -ax 0 0 1 -rcp 0 -cuv 3 -ch 1;
+setAttr "pCylinder1.translateX" 0.22;
+setAttr "pCylinder1.translateY" 0.2;
+setAttr "pCylinder1.translateZ" 0.4;
+setAttr "pCylinder1.scaleX" 0.17;
+setAttr "pCylinder1.scaleY" 0.17;
+setAttr "pCylinder1.scaleZ" 0.17;
+rename "pCylinder1" "leftEyeGlass";
+
+duplicate -rr;
+setAttr "leftEyeGlass1.translateX" -0.22;
+rename "leftEyeGlass1" "rightEyeGlass";
+
+//mouth
+select -r head ;
+duplicate -rr;
+rename "head1" "mouth";
+move -r 0 -0.54 0 ;
+scale -r 1 0.33 1 ;
+move -r 0 0 -0.5 mouth.scalePivot mouth.rotatePivot ;
+rotate -r -os -fo 1 0 ;
+
+//neck
+polyCylinder -r 1 -h 2 -sx 14 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+rename "pCylinder1" "neck";
+move -r 0 -0.6 0 ;
+scale -r 0.2 0.2 0.2 ;
+
+//body
+select -r head ;
+duplicate -rr;
+rename "head1" "body";
+move -r 0 -1.5 ;
+scale -r 1.15 1.75 1 ;
+
+//chestplate
+duplicate -rr;
+rename "body1" "chestplate";
+setAttr "chestplate.translateY" -1.17;
+setAttr "chestplate.translateZ" 0.08;
+setAttr "chestplate.scaleX" 0.8;
+setAttr "chestplate.scaleY" 0.8;
+
+//body
+dR_multiCutTool;
+hilite -r body ;
+dR_multiCutTool;
+delete `polyMoveVertex -ch 1 |body|bodyShape.vtx[0]`; polySplit -ch 1 -sma 180 -ep 4 0.220756 -ep 5 0.220756 -ep 9 0.779244 -ep 8 0.779244 -ep 4 0.220756 |body|bodyShape;  select -cl;
+delete `polyMoveVertex -ch 1 |body|bodyShape.vtx[0]`; polySplit -ch 1 -sma 180 -ep 6 0.184106 -ep 7 0.184106 -ep 17 0.184106 -ep 11 0.815894 -ep 10 0.815894 -ep 19 0.815894 -ep 6 0.184106 |body|bodyShape;  select -cl;
+MergeVertexTool;
+move -ws -a -0.575000000000000 -2.000000000000000 0.315894007682800 -puv body.vtx[0] body.vtx[16] ; move -ws -a 0.575000000000000 -2.000000000000000 0.315894007682800 -puv body.vtx[1] body.vtx[15] ; polyMergeVertex -d 0.000001 body.vtx[0] body.vtx[16] body.vtx[1] body.vtx[15] ; select -cl;
+select -r body.e[16] ;
+polySoftEdge -a 0 -ch 1 body.e[16];
+
+polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1;
+setAttr "pCube1.translateY" -1.14;
+setAttr "pCube1.translateZ" -0.14;
+setAttr "pCube1.scaleX" 0.9;
+setAttr "pCube1.scaleY" .9;
+setAttr "pCube1.scaleZ" .9;
+rename "pCube1" "back";
+
+select -r body.f[8] ;
+polyExtrudeFacet -constructionHistory 1 -keepFacesTogether 1 -pvx 0 -pvy -1.845470804 -pvz -0.5 -divisions 1 -twist 0 -taper 1 -off 0 -thickness 0 -smoothingAngle 30 body.f[8];
+scale -r -p 0cm -1.85cm -0.5cm 0.85 1 1 ;
+select -r body.e[35] ;
+move -r -os -wd 0 0.0936615 0 ;
+select -r body.f[8] ;
+polyExtrudeFacet -constructionHistory 1 -keepFacesTogether 1 -pvx 0 -pvy -1.798640105 -pvz -0.5 -divisions 1 -twist 0 -taper 1 -off 0 -thickness 0 -smoothingAngle 30 body.f[8];;
+setAttr "polyExtrudeFace2.localTranslate" -type double3 0 0 -0.0635025 ;
+
+//button1
+select -r chestplate ;
+duplicate -rr;
+rename "chestplate1" "button1";
+move -r -0.1 0.18 0.05 ;
+scale -r 0.5 0.22 1 ;
+//button2
+duplicate -rr;
+move -r 0 -0.33 0 ;
+//knob1
+polyCylinder -r .1 -h .3 -sx 12 -sy 1 -sz 1 -ax 0 0 1 -rcp 0 -cuv 3 -ch 1;
+rename "pCylinder1" "knob1";
+move -r -os -wd 0.248154 -0.91 0.518968 ;
+duplicate -rr;
+//knob2
+move -r -os -wd 0 -0.24 0 ;
+duplicate -rr;
+//knob3
+move -r -os -wd 0 -0.24 0 ;
+select -r knob1 ;
+select -tgl knob2 ;
+select -tgl knob3 ;
+scale -r 0.74 0.74 0.74 ;
+
+//legs
+polyCylinder -r 1 -h 2 -sx 14 -sy 2 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+setAttr "pCylinder1.translateX" -0.3;
+setAttr "pCylinder1.translateY" -2.25;
+setAttr "pCylinder1.translateZ" -0.05;
+setAttr "pCylinder1.scaleX" 0.23;
+setAttr "pCylinder1.scaleY" 0.3;
+setAttr "pCylinder1.scaleZ" 0.23;
+rename "pCylinder1" "rightLeg";
+select -r rightLeg.e[14:27] ;
+move -r -os -wd 0 0 0.023695 ;
+select -r rightLeg ;
+duplicate -rr;
+setAttr "rightLeg1.translateX" 0.3;
+rename "rightLeg1" "leftLeg";
+
+//feet
+polyCube -w 1 -h 1 -d 1 -sx 1 -sy 2 -sz 1 -ax 0 1 0 -cuv 4 -ch 1;
+setAttr "pCube1.translateX" .3;
+setAttr "pCube1.translateY" -2.6;
+setAttr "pCube1.translateZ" .1;
+setAttr "pCube1.scaleX" 0.56;
+setAttr "pCube1.scaleY" 0.28;
+setAttr "pCube1.scaleZ" 1.05;
+rename "pCube1" "leftFoot";
+select -r leftFoot.e[2] ;
+move -r -os -wd 0 0 -0.349129 ;
+select -r leftFoot.e[1] ;
+move -r -os -wd 0 0.069416 -0.11745 ;
+select -r leftFoot.e[0] ;
+move -r -os -wd 0 0 -0.0442262 ;
+
+select -r leftFoot ;
+duplicate -rr;
+setAttr "leftFoot1.translateX" -.3;
+rename "leftFoot1" "rightFoot";
+
+//left arm
+polyCylinder -r .2 -h .9 -sx 12 -sy 6 -sz 1 -ax 1 0 0 -rcp 0 -cuv 3 -ch 1;
+setAttr "pCylinder1.translateX" .7;
+setAttr "pCylinder1.translateY" -1;
+rename "pCylinder1" "leftArm";
+
+select -add leftArm.e[12:23] ;
+select -add leftArm.e[36:47] ;
+select -add leftArm.e[60:71] ;
+scale -r -p 1cm -1cm 0cm 1 0.84 0.84 ;
+
+//hand
+polyTorus -r .3 -sr .2 -tw 0 -sx 10 -sy 10 -ax 0 0 1 -cuv 1 -ch 1;
+setAttr "pTorus1.translateX" 1.55;
+setAttr "pTorus1.translateY" -1;
+setAttr "pTorus1.scaleX" 0.75;
+setAttr "pTorus1.scaleY" 0.75;
+setAttr "pTorus1.scaleZ" 0.75;
+rename "pTorus1" "leftHand";
+select -r leftHand.f[8:9] leftHand.f[18:19] leftHand.f[28:29] leftHand.f[38:39] leftHand.f[48:49] leftHand.f[58:59] leftHand.f[68:69] leftHand.f[78:79] leftHand.f[88:89] leftHand.f[98:99] ;
+doDelete;
+
+select -r leftHand.e[80] leftHand.e[89] leftHand.e[98] leftHand.e[107] leftHand.e[116] leftHand.e[125] leftHand.e[134] leftHand.e[143] leftHand.e[152] leftHand.e[161] ;
+polyExtrudeEdge -constructionHistory 1 -keepFacesTogether 1 -pvx 2.232028864 -pvy -0.867748267 -pvz -5.587935448e-009 -divisions 1 -twist 0 -taper 1 -offset 0 -thickness 0 -smoothingAngle 30 leftHand.e[80] leftHand.e[89] leftHand.e[98] leftHand.e[107] leftHand.e[116] leftHand.e[125] leftHand.e[134] leftHand.e[143] leftHand.e[152] leftHand.e[161];
+select -r leftHand.vtx[90:99] ;
+polyMergeVertex  -d 1 -am 1 -ch 1 leftHand.vtx[90:99];
+
+select -r leftHand.e[88] leftHand.e[97] leftHand.e[106] leftHand.e[115] leftHand.e[124] leftHand.e[133] leftHand.e[142] leftHand.e[151] leftHand.e[160] leftHand.e[169] ;
+polyExtrudeEdge -constructionHistory 1 -keepFacesTogether 1 -pvx 2.232028919 -pvy -1.132251769 -pvz 0 -divisions 1 -twist 0 -taper 1 -offset 0 -thickness 0 -smoothingAngle 30 leftHand.e[88] leftHand.e[97] leftHand.e[106] leftHand.e[115] leftHand.e[124] leftHand.e[133] leftHand.e[142] leftHand.e[151] leftHand.e[160] leftHand.e[169];
+select -r leftHand.vtx[91:100] ;
+polyMergeVertex  -d 1 -am 1 -ch 1 leftHand.vtx[91:100];
+
+
+
+polySphere -r .15 -sx 8 -sy 8 -ax 0 1 0 -cuv 2 -ch 1;
+setAttr "pSphere1.translateX" 1.2;
+setAttr "pSphere1.translateY" -1;
+rename "pSphere1" "leftWrist";
+polySoftEdge -a 180 -ch 1;
+
+//right arm
+select -r leftHand leftArm leftWrist ;
+duplicate -rr;
+doGroup 0 1 1;
+setAttr "group1.scaleX" -1;
+select -r leftHand1 leftArm1 leftWrist1 ;
+parent -w;
+rename "leftArm1" "rightArm";
+rename "leftHand1" "rightHand";
+rename "leftWrist1" "rightWrist";
+select -r group1 ;
+doDelete;
+
+//group
+select -r leftEyeGlass rightEyeGlass head antenna antennaTip leftEye rightEye mouth neck body chestplate back button1 button2 knob1 knob2 knob3 rightLeg leftLeg leftFoot rightFoot leftArm leftHand leftWrist rightHand rightArm rightWrist ;
+makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
+doGroup 0 1 1;
+select -r group1 ;
+rename "group1" "RobotGeo";
+setAttr "RobotGeo.translateY" 2.75;
+move -ws 0 0 0 RobotGeo.scalePivot RobotGeo.rotatePivot ;
+setAttr "RobotGeo.scaleZ" 1.5;
+setAttr "RobotGeo.scaleX" 1.5;
+setAttr "RobotGeo.scaleY" 1.5;
+makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
+
+/*
+//color
+select -r head antenna antennaTip leftEye rightEye mouth body chestplate back leftFoot rightFoot leftHand leftWrist rightHand rightWrist ;
+shadingNode -asShader blinn;
+sets -renderable true -noSurfaceShader true -empty -name blinn1SG;
+connectAttr -f blinn1.outColor blinn1SG.surfaceShader;
+assignCreatedShader "blinn" "" blinn1 "head antenna antennaTip rightEye leftEye mouth body chestplate back rightFoot leftFoot leftHand rightHand leftWrist rightWrist";
+sets -e -forceElement blinn1SG;
+setAttr "blinn1.color" -type double3 0.28455 0.28455 0.28455 ;
+
+select -r neck rightLeg leftLeg leftArm rightArm ;
+shadingNode -asShader blinn;
+sets -renderable true -noSurfaceShader true -empty -name blinn2SG;
+connectAttr -f blinn2.outColor blinn2SG.surfaceShader;
+assignCreatedShader "blinn" "" blinn2 "neck leftArm rightArm leftLeg rightLeg";
+sets -e -forceElement blinn2SG;
+setAttr "blinn2.color" -type double3 0.0894331 0.0894331 0.0894331 ;
+setAttr "blinn2.specularColor" -type double3 0.211383 0.211383 0.211383 ;
+*/
+
+//end
+select -r rightEye ;
+select -cl  ;

@@ -1,0 +1,13 @@
+string $sel[] = `ls -sl`;
+
+for($i = 0; $i < 14; $i++)
+{
+    JointTool;
+    joint -p 0 0 0 ;
+    select -add $sel[$i] ;
+    parent;
+    setAttr "joint1.translateZ" 0;
+    setAttr "joint1.translateX" 0;
+    setAttr "joint1.translateY" 0;
+    parent -w;
+};

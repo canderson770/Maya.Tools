@@ -1,0 +1,3 @@
+workspaceControl -retain false -floating true -label Cody -widthProperty "preferred" 
+-initialWidth 160 -initialHeight 560 -resizeWidth 160 -resizeHeight 560 
+-uiScript "CreateMyWindow();" MyToolBox;

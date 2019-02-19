@@ -1,0 +1,42 @@
+global proc ControlWindow()
+{
+    string $mWindow = "ctrlWindow";
+    
+    if(`window -exists $mWindow` == true)
+        deleteUI -window $mWindow;
+        
+    $mWindow = `window -title "Control Creator" $mWindow`;
+    string $mainColumn = `columnLayout -adjustableColumn 1 -parent $mWindow`;
+    string $circleBtn = `button - parent $mainColumn -label "Circle" 
+        -command "CreateControl(\"circle\", \"test\")"`;
+    string $squareBtn = `button - parent $mainColumn -label "Square" 
+        -command "CreateControl(\"square\", \"test\")"`;
+    string $cubeBtn = `button - parent $mainColumn -label "Cube" 
+        -command "CreateControl(\"cube\", \"test\")"`;
+    string $txtField = `textFieldGrp -parent $mainColumn -label "Control Name"`;
+    string $floatField = `floatSliderGrp  -parent $mainColumn -label "Size" -minValue 0 -maxValue 100 -field 1 -value 1`;
+    
+    showWindow $mWindow;
+}
+
+ControlWindow();
+
+global proc CreateControl(string $type, string $nameF, string $scale)
+{
+     string $ctrl;
+     
+     if($type == "circle")
+     {
+         string = `circle`;
+     }
+     else if($type == "square")
+     {
+         
+     }
+     else if($type == "cube")
+     {
+          
+     }
+	 
+    $ctrl = `rename $ctrl $nameF`;
+}

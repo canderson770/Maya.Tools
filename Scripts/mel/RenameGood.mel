@@ -1,0 +1,36 @@
+proc string[] Rename(string $name)
+{
+    string #sels[] = `ls -sl`;
+    string $returnNames[];
+    string $buffer[];
+    
+    int $numTokens = `tokenize $name "#" $buffer`;
+    
+    if($numTokens != 2)
+    {
+        error("Too many #");
+    }
+    
+    for($i=0; $i<size($sels); $i++)
+    {
+        string $newName;
+        $newName = $buffer[0] + ($i+1) + $buffer[1];
+        stringArrayInsertAtIndex(size($returnNames), $returnNames, `rename $sels[$i] $newName`;
+    }
+    
+    return $returnNames;
+}
+
+
+string $text;
+string $result = `promptDialog 
+     -title "Rename Object"
+     -message "i.e. Example_#_Jnt"
+     -button "OK" -button "Cancel"
+     -defaultButton "OK" -cancelButton "Cancel"
+     -dismissString "Cancel"`;
+
+if ($result == "OK") 
+{
+     Rename($text);
+}

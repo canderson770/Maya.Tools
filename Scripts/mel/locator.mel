@@ -1,0 +1,34 @@
+proc CreateLocator(string $name)
+{   
+	cluster -name "temp";   
+	spaceLocator -name $name;
+    
+	float $pos[] = `xform -q -ws -rp "tempHandle"`;
+	float $rot[] = `xform -q -ws -ro"tempHandle"`;
+
+	select -r $name;
+	move -rpr $pos[0] $pos[1] $pos[2] $name;
+	rotate -a -ws $rot[0] $rot[1] $rot[2] $name;
+    
+    select -r "tempHandle";
+    doDelete;
+    select -d; 
+}
+
+string $sels[] = `ls -sl`;
+if(size($sels) < 2)
+    error("Select at least two things idiot");
+
+string $text;
+string $result = `promptDialog 
+     -title "Create Locator"
+     -message "Enter Name:"
+     -button "OK" -button "Cancel"
+     -defaultButton "OK" -cancelButton "Cancel"
+     -dismissString "Cancel"`;
+
+if ($result == "OK")
+{
+     $text = `promptDialog -query -text`;
+     CreateLocator($text);
+}

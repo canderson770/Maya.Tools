@@ -1,0 +1,42 @@
+global proc CreateManyLocators(string $type)
+{   
+	if($type == "Each")
+	{
+		string $sels[] = `ls -sl`;
+		string $savedSels[];
+		
+		for($i=0; $i<size($sels); $i++)
+		{
+			select -r $sels[$i];
+			string $locator[] = `spaceLocator -a`;
+
+			float $pos[] = `xform -q -ws -rp $sels[$i]`;
+			float $rot[] = `xform -q -ws -ro $sels[$i]`;
+		
+			move -rpr $pos[0] $pos[1] $pos[2] $locator[0];
+			rotate -a -ws $rot[0] $rot[1] $rot[2] $locator[0];
+			
+			$savedSels[$i] = `rename $locator[0] ($sels[$i] + "Locator")`;
+			select -cl;
+		}
+		
+		select -cl;
+		for($i=0; $i<size($savedSels); $i++)
+		{
+			select -add $savedSels[$i];
+		} 
+	}
+	else if ($type == "All")
+	{
+		float $bbox[] = `exactWorldBoundingBox`;
+
+		float $pos[];  
+		$pos[0] = (($bbox[0] +  $bbox[3]) / 2); // X cord =(X min - X max)/2
+		$pos[1] = (($bbox[1] +  $bbox[4]) / 2); // Y cord =(Y min - Y max)/2
+		$pos[2] = (($bbox[2] +  $bbox[5]) / 2); // Z cord =(Z min - Z max)/2
+
+		string $mainLocator[] = `spaceLocator`;
+		move -rpr $pos[0] $pos[1] $pos[2] $mainLocator[0];
+		select -r $mainLocator;
+	}
+}

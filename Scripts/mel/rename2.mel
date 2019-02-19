@@ -1,0 +1,37 @@
+SelectAllJoints;
+string $sels[] = `ls -sl`;
+string $thisName = "Tail";
+
+for($i = 0; $i < size($sels); $i++)
+{
+    select-d;
+    select $sels[$i];
+    setAttr ($sels[$i] + ".segmentScaleCompensate") 0;
+    string $newName = $thisName + $i + "_Jnt";
+    rename $sels[$i] $newName;
+    
+    string $ctrl[] = `circle`;
+    select -add $newName;
+    parent;
+    
+    string $newCtrlName = $ctrl[0] + $i + "_Ctrl";
+    rename $ctrl[0] $newCtrlName;
+
+    string $grp[] = `doGroup 0 1 1`;
+    
+    string $newGrpName = $grp[0] + (string)$i +"#_Grp";
+    //$newGrpName = `substitute "#" $newGrpName (string)$i`;
+    rename "group1" $newGrpName;
+        
+    setAttr ($newGrpName + ".translateX") 0;
+    setAttr ($newGrpName + ".translateY") 0;
+    setAttr ($newGrpName + ".translateZ") 0;
+    setAttr ($newGrpName + ".rotateX") 0;
+    setAttr ($newGrpName + ".rotateY") 0;
+    setAttr ($newGrpName + ".rotateZ") 0;
+    setAttr ($newGrpName + ".scaleX") 1;
+    setAttr ($newGrpName + ".scaleY") 1;
+    setAttr ($newGrpName + ".scaleZ") 1;
+    
+
+}

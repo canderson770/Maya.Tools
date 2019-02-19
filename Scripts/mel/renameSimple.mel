@@ -1,0 +1,10 @@
+string $selection[] = `ls -sl`;
+string $newName = "Head";
+
+for($i = 0; $i < size($selection); $i++)
+{
+    select-d;
+    select $selection[$i];
+    string $temp = $newName + ($i + 1) + "_Jnt";
+    rename $selection[$i] $temp;
+}
