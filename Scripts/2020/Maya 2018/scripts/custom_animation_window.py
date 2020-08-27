@@ -5,12 +5,12 @@ import maya.cmds as cmds
 import maya.mel as mel
 
 def custom_animation():        
-    custom_animation_window =  'custom_animation'
+    custom_animation_window = 'custom_animation'
 
     if cmds.window(custom_animation_window, exists=True):
         cmds.deleteUI(custom_animation_window, window=True)
 
-    custom_animation_window = cmds.window(custom_animation_window, title='Animation Master')
+    custom_animation_window = cmds.window(custom_animation_window, title='CSA Animation')
     
     main_column = cmds.columnLayout(parent=custom_animation_window)
     
@@ -47,6 +47,7 @@ def custom_animation():
 def change_color_settings():
     mel.eval('ColorPreferencesWindow;')
 
+
 def change_key_color(onOff):
     current_time = cmds.currentTime(q=True)
     cmds.selectKey(clear=True)
@@ -54,6 +55,7 @@ def change_key_color(onOff):
     cmds.keyframe(tds=onOff)
     if onOff:
         mel.eval('timeSliderEditKeys makeKey;')
+
 
 def change_to_breakdown(onOff):
     if onOff:
@@ -68,7 +70,8 @@ def change_to_breakdown(onOff):
         cmds.selectKey(clear=True)
         cmds.selectKey(add=True, keyframe=True, time=(current_time,current_time))
         cmds.keyframe(tds=False)
-        
+
+
 def change_range(clip_frame_list, start, end):
     if not start == '':
         cmds.playbackOptions(min=start, ast=start)
@@ -129,8 +132,7 @@ def create_clip_row(custom_animation_column):
     cmds.menuItem(parent=right_click_shift_menu, label='Key Rotate', command=lambda *args: mel.eval('SetKeyRotate'))
     cmds.menuItem(parent=right_click_shift_menu, label='Key Scale', command=lambda *args: mel.eval('SetKeyScale')) 
     
-        
-    
+
 def delete_row(delete_button, frame):
     if frame:
         cmds.deleteUI(cmds.symbolButton(delete_button, q=True, parent=True))
@@ -160,7 +162,8 @@ def frame_select(clip_frame_list, start, end):
         if not end == '':   
             cmds.playbackOptions(min=start, ast=start)
             cmds.playbackOptions(max=end, aet=end)
-    
+
+
 def frame_remove(clip_frame_list):
     cmds.textScrollList(clip_frame_list, e=True, removeItem=cmds.textScrollList(clip_frame_list, q=True, selectItem=True))
     

@@ -2,6 +2,6 @@
 # EDITED: 2020-08-25
 # ============================================
 import maya
-import toolbox
+import my_menu
 
-maya.utils.executeDeferred(toolbox.dockable_toolbox, standalone=True)
+maya.utils.executeDeferred(my_menu.create_my_menu, standalone=True)

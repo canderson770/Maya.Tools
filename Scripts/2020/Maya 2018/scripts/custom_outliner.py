@@ -10,12 +10,9 @@ def custom_outliner():
     if cmds.window(custom_outliner_window, exists=True):
         cmds.deleteUI(custom_outliner_window, window=True)
 
-    custom_outliner_window = cmds.window(custom_outliner_window, title='Custom Outliner')
-    
+    custom_outliner_window = cmds.window(custom_outliner_window, title='CSA Outliner Filter')
     custom_outliner_column = cmds.formLayout(parent=custom_outliner_window)
-    
     custom_outliner_row_buttons = cmds.rowLayout(parent=custom_outliner_column, numberOfColumns=6)
-    
     custom_outliner_list_row = cmds.paneLayout(parent=custom_outliner_column, configuration='vertical2')
     
     type_name_list = ['transform', 'nurbsCurve', '--------------------------', 'joint',
