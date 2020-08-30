@@ -3,7 +3,7 @@
 # EDITED: 2020-08-26
 # ============================================
 import maya.cmds as cmds
-
+import maya.mel as mel
 
 def simple_fk():
     '''Creates a FK system along a single chain of joints'''
@@ -195,7 +195,8 @@ def broken_fk():
 
 
 def simple_ik():
-    print('not implemented')
+    mel.eval('IKHandleTool')
+    print('Auto IK rig not implemented')
 
 def simple_rk():
-    print('not implemented')
+    print('Auto RK rig not implemented')
