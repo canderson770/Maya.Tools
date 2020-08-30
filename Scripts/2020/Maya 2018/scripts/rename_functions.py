@@ -4,6 +4,7 @@
 # ============================================
 import maya.cmds as cmds
 import maya.mel as mel
+import re
 
 
 def sequential_renamer(new_name):
@@ -20,10 +21,13 @@ def sequential_renamer(new_name):
     for index, sel in enumerate(sels):
         i = index + 1
         # if only one selected item, don't put number
-        if len(sels) == 1:
-            i = ''
+        if len(sels) == 1: i = ''
+        
         # rename
-        cmds.rename(sel, new_name + str(i))
+        if('#' in new_name):
+            cmds.rename(sel, re.sub('#', str(i), new_name))
+        else:
+            cmds.rename(sel, new_name + str(i))
 
 
 def search_and_replace():
