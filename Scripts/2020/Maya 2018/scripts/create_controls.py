@@ -2,6 +2,7 @@
 #2017-11-06
 #============================================
 import maya.cmds as cmds
+import re
 
 
 def place_controls():
@@ -14,8 +15,9 @@ def place_controls():
     #Loop through selection
     for sel in sels:
         #Set up control names
-        ctrl_name = '%s__Ctrl' % sel
-        grp_name = '%s__Grp' % sel
+        sel_name = re.sub('_Jnt', '', sel)
+        ctrl_name = '%s_Ctrl' % sel_name
+        grp_name = '%s_Grp' % sel_name
         
         #Create control and control group    
         ctrl = cmds.circle(c=(0,0,0), nr=(1,0,0), sw=360, r=1, d=3, ut=0, tol=0, s=8, ch=1, n=ctrl_name)  
