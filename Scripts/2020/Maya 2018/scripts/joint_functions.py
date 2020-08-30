@@ -5,6 +5,8 @@
 import maya.cmds as cmds
 import maya.mel as mel
 
+local_axis_on = False
+
 
 def show_joint_attr():
     '''Toggles Joint Orients, Scale Compensate, and DisplayLocalAxis for all joints'''
@@ -30,7 +32,11 @@ def display_orient_joint_options():
 
 def display_local_axis():
     '''Toggles local axis for all joints'''
+    # toggle bool
+    global local_axis_on
+    local_axis_on = 1 - local_axis_on
+
+    # loop through joints
     sels = cmds.ls(type='joint')
     for sel in sels:
-        value = 1 - cmds.getAttr('%s.displayLocalAxis' % sel)
-        cmds.setAttr('%s.displayLocalAxis' % sel, value)
+        cmds.setAttr('%s.displayLocalAxis' % sel, local_axis_on)
