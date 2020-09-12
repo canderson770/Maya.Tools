@@ -209,7 +209,7 @@ def create_my_toolbox(standalone=False):
 	# cmds.showWindow(my_window)
 
 	# Check if dockable window exists
-	if cmds.dockControl(my_dock_control, q=True, e=True): cmds.deleteUI(my_dock_control, control=True)
+	if cmds.dockControl(my_dock_control, q=True, exists=True): cmds.deleteUI(my_dock_control, control=True)
 
 	# Create dockable window
 	my_dock_control = cmds.dockControl(my_dock_control, area='left', width=w_width, fixedWidth=True,
