@@ -180,30 +180,58 @@ def create_my_toolbox(standalone=False):
 	# Skinning
 	bind_skin_button = cmds.button(p=t1_column, l='Bind Skin', ann='Binds skin to joint(s)',
 				command=lambda *args: cmds.bindSkin())
+
+	influence_row = cmds.rowLayout(p=t1_column, nc=2, adj=2, columnWidth=(1, 75), columnAttach=two_button_row)
+	cmds.button(p=influence_row, l='Add', ann='Removes unused influences',
+				command=lambda *args: mel.eval('AddInfluence'))
+	cmds.button(p=influence_row, l='Remove', ann='Removes unused influences',
+				command=lambda *args: mel.eval('RemoveInfluence'))
+	remove_inf_button = cmds.button(p=t1_column, l='Remove Unused', ann='Removes unused influences',
+									command=lambda *args: mel.eval('removeUnusedInfluences'))
+
+	cmds.separator(p=t1_column, height=sep_height)
+
+	# Paint Weights
 	paint_weights_button = cmds.button(p=t1_column, l='Paint Weights', ann='Opens paint weight options',
 				command=lambda *args: mel.eval('ArtPaintSkinWeightsToolOptions'))
+	pw_options_row = cmds.rowLayout(p=t1_column, nc=2, adj=2, columnWidth=(1, 75), columnAttach=two_button_row)
+	mirror_weights_button = cmds.button(p=pw_options_row, l='Mirror', ann='Opens mirror weight options',
+			   command=lambda *args: mel.eval('MirrorSkinWeightsOptions'))
+	copy_weights_button = cmds.button(p=pw_options_row, l='Copy', ann='Opens copy weight options',
+				command=lambda *args: mel.eval('CopySkinWeightsOptions'))
+
+	# ANIMATION TOOLS
+	cmds.separator(p=t1_column, height=sep_height)
+	other_label = cmds.text(p=t1_column, l='Animation')
+	cmds.separator(p=t1_column, height=sep_height)
+
+	anim_row = cmds.rowLayout(p=t1_column, nc=2, adj=2, columnWidth=(1, 75), columnAttach=two_button_row)
+	cmds.button(p=anim_row, l='Graph Editor', ann='Opens graph editor',
+				command=lambda *args: mel.eval('GraphEditor'))
+	cmds.button(p=anim_row, l='Exporter', ann='Opens fbx game exporter window',
+				command=lambda *args: mel.eval('gameFbxExporter'))
 
 	# tab 2
 	t2_column = cmds.columnLayout(p=my_tabs, adj=True, columnAlign='center')
 
-	cmds.separator(p=t1_column, height=sep_height)
-	other_label = cmds.text(p=t1_column, l='BETA Functions Below!')
-	cmds.separator(p=t1_column, height=sep_height)
+	cmds.separator(p=t2_column, height=sep_height)
+	other_label = cmds.text(p=t2_column, l='BETA Functions Below!')
+	cmds.separator(p=t2_column, height=sep_height)
 
 	# Random Placement
-	random_placement_button = cmds.button(p=t1_column, l='Random Placement', ann='Random placement options',
+	random_placement_button = cmds.button(p=t2_column, l='Random Placement', ann='Random placement options',
 				command=lambda *args: random_placement.random_placement_prompt())
 
 	# Custom Outliner
-	custom_outliner_button = cmds.button(p=t1_column, l='Custom Outliner', ann='Open custom outliner',
+	custom_outliner_button = cmds.button(p=t2_column, l='Custom Outliner', ann='Open custom outliner',
 				command=lambda *args: custom_outliner.custom_outliner())
 
 	# Custom Animation window
-	custom_outliner_button = cmds.button(p=t1_column, l='Animator', ann='Open animation master',
+	custom_outliner_button = cmds.button(p=t2_column, l='Animator', ann='Open animation master',
 				command=lambda *args: custom_animation_window.custom_animation())
 
 	# Add tabs
-	cmds.tabLayout(my_tabs, edit=True, tabLabel=[(t1_column, 'Main'), (t2_column, '...')])
+	cmds.tabLayout(my_tabs, edit=True, tabLabel=[(t1_column, 'Main'), (t2_column, 'BETA')])
 
 	# Show window
 	# cmds.showWindow(my_window)
@@ -212,5 +240,5 @@ def create_my_toolbox(standalone=False):
 	if cmds.dockControl(my_dock_control, q=True, exists=True): cmds.deleteUI(my_dock_control, control=True)
 
 	# Create dockable window
-	my_dock_control = cmds.dockControl(my_dock_control, area='left', width=w_width, fixedWidth=True,
+	my_dock_control = cmds.dockControl(my_dock_control, area='right', width=w_width, fixedWidth=True,
 				aa=['right', 'left'], content=my_window)
